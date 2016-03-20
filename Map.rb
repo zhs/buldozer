@@ -4,7 +4,7 @@ class Map
 		@map = map
 	end
 #map - it's an array with map like [[0,0,0],
-#1 - start							[4,0,1]]
+#1 - start							[4,0,1],
 #2 - stone							[0,0,0]]
 #3 - stone trap
 #4 - wall
