@@ -27,7 +27,7 @@ class Buldozer
     current_column = @map.buldozer_position[1]
 
     case @map.map[current_row+updown][current_column+leftright]
-    # wall
+    # wall.
     when 4,5
       nil
     # empty or trap
