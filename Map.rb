@@ -6,26 +6,26 @@ class Map
     @map = map
   end
 
-# map - it's an array with map like [[0,0,0],
-# 1 - start                          [4,0,1],
-# 2 - stone                          [0,0,0]]
-# 3 - stone trap
-# 4 - wall
-# 5 - trapped stone
-
   def buldozer_position
     # find and return buldozer_position point (1)
     row = 0
     column = 0
     ir = 0
     @map.each do |index|
-      unless index.index(1).nil?
-        column = index.index(1)
+      unless index.index(POSITION).nil?
+        column = index.index(POSITION)
         row = ir
       end
       ir += 1
     end
     [row, column]
+  end
+
+  def at(row, column, *args)
+    
+    @map[row][column] = args[0] if not args[0].nil?
+    @map[row][column]
+
   end
 
   def show
@@ -38,21 +38,16 @@ class Map
     if win?
       puts 'WIN!'
     else
-      puts "Stones: #{count(2)} / Trapped: #{count(5)} "
+      puts "Stones: #{count(STONE)} / Trapped: #{count(TRAPPEDSTONE)} "
     end
   end
 
-  def validate?
-    error = 0
-    @map.size.times do |index|
-      error = 1 if @map.size != @map[index].size
-    end
-    error = 1 if count(2) != count(3)
-    check(error)
+  def validate
+    # _
   end
 
   def size
-    @map.size if validate?
+    @map.size
   end
 
   def count(object)
@@ -64,40 +59,29 @@ class Map
   end
 
   def win?
-    if count(2) == 0
+    if count(STONE) == 0
       true
     else
       false
-    end	
+    end
   end
 
   def to_console(val)
     case val
-    when 4
+    when WALL
       'X'
-    when 0
+    when EMPTY
       ' '
-    when 2
+    when STONE
       'o'
-    when 3
+    when TRAP
       ':'
-    when 5
+    when TRAPPEDSTONE
       '0'
-    when 1
+    when POSITION
       '+'
     else
       val.to_s
-    end
-  end
-
-  private
-
-  def check(e)
-    case e
-    when 1
-      false
-    when 0
-      true
     end
   end
 end

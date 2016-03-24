@@ -2,6 +2,7 @@
 class Buldozer
   def initialize(map)
     @map = map
+    @@trap_status = false
   end
 
   def left
@@ -23,40 +24,55 @@ class Buldozer
   private
 
   def look(leftright, updown)
-    current_row = @map.buldozer_position[0]
-    current_column = @map.buldozer_position[1]
+    current_row, current_column = @map.buldozer_position
 
-    case @map.map[current_row + updown][current_column + leftright]
-    # wall.
-    when 4, 5
-      nil
+    case @map.at(current_row + updown, current_column + leftright)
     # empty or trap
-    when 0
-      @map.map[current_row][current_column] = 0
-      @map.map[current_row + updown][current_column + leftright] = 1
+    when EMPTY
+      @map.at(current_row, current_column, EMPTY)
+      if @@trap_status 
+        @map.at(current_row, current_column, TRAP)
+        @@trap_status = false
+      end
+      @map.at(current_row + updown, current_column + leftright, POSITION)
     # stone
-    when 2
+    when STONE
       look_stone(leftright, updown, current_row, current_column)
+    when TRAP
+      @map.at(current_row, current_column, EMPTY)
+      @map.at(current_row + updown, current_column + leftright, POSITION)
+      @@trap_status = true
+    when TRAPPEDSTONE
+      @map.at(current_row, current_column, EMPTY)
+      @map.at(current_row + updown, current_column + leftright, POSITION)
+      @map.at(current_row + updown * 2, current_column + leftright * 2, STONE)
+      
+      @@trap_status = true
     end
   end
 
   def move_stone(leftright, updown, current_row, current_column)
-    @map.map[current_row][current_column] = 0
-    @map.map[current_row + updown][current_column + leftright] = 1
-    @map.map[current_row + updown * 2][current_column + leftright * 2] = 2
+    @map.at(current_row, current_column, EMPTY)
+    @map.at(current_row + updown, current_column + leftright, POSITION)
+    @map.at(current_row + updown * 2, current_column + leftright * 2, STONE)
   end
 
   def look_stone(leftright, updown, current_row, current_column)
-    case @map.map[current_row + updown * 2][current_column + leftright * 2]
-    when 4, 2, 5
-      nil
-    when 0
+    case @map.at(current_row + updown * 2, current_column + leftright * 2)
+    when EMPTY
       move_stone(leftright, updown, current_row, current_column)
+      if @@trap_status 
+        @map.at(current_row, current_column, TRAP)
+        @@trap_status = false
+      end
     # stone trap
-    when 3
+    when TRAP
       move_stone(leftright, updown, current_row, current_column)
-      # trapped to 5!
-      @map.map[current_row + updown * 2][current_column + leftright * 2] = 5
+      @map.at(current_row + updown * 2, current_column + leftright * 2, TRAPPEDSTONE)
+      if @@trap_status 
+        @map.at(current_row, current_column, TRAP)
+        @@trap_status = false
+      end
     end
   end
 end

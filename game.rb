@@ -1,12 +1,22 @@
+EMPTY = 0
+POSITION = 1
+STONE = 2
+TRAP =3
+WALL = 4
+TRAPPEDSTONE = 5
+
 require_relative 'map'
 require_relative 'buldozer'
 require 'io/console'
 
 # Game class
 class Game
-  def start_game(map)
+  def initialize(map)
     @map = Map.new(map)
-    @bul = Buldozer.new(@map)
+    @bul = Buldozer.new(@map)   
+  end
+
+  def start_game
     system 'clear'
     refresh
     game_process
@@ -64,5 +74,5 @@ test_map = [[4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
             [4, 0, 0, 0, 0, 0, 0, 0, 0, 4],
             [4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
 
-game = Game.new
-game.start_game(test_map)
+game = Game.new(test_map)
+game.start_game
