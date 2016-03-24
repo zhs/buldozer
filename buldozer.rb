@@ -24,7 +24,7 @@ class Buldozer
   private
 
   def look(leftright, updown)
-    current_row, current_column = @map.buldozer_position
+    current_row, current_column = @map.find(POSITION)
 
     case @map.at(current_row + updown, current_column + leftright)
     # empty or trap

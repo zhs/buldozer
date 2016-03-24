@@ -1,31 +1,29 @@
 # class Map
 class Map
-  attr_accessor :map
+  # attr_accessor :map
 
   def initialize(map)
     @map = map
   end
 
-  def buldozer_position
-    # find and return buldozer_position point (1)
+  def find(tile)
     row = 0
     column = 0
-    ir = 0
+    i = 0
+
     @map.each do |index|
-      unless index.index(POSITION).nil?
-        column = index.index(POSITION)
-        row = ir
+      unless index.index(tile).nil?
+        column = index.index(tile)
+        row = i
       end
-      ir += 1
+      i += 1
     end
     [row, column]
   end
 
-  def at(row, column, *args)
-    
+  def at(row, column, *args)   
     @map[row][column] = args[0] if not args[0].nil?
     @map[row][column]
-
   end
 
   def show
