@@ -7,22 +7,11 @@ class Map
   end
 
   def find(tile)
-    row = 0
-    column = 0
-    i = 0
-
-    @map.each do |index|
-      unless index.index(tile).nil?
-        column = index.index(tile)
-        row = i
-      end
-      i += 1
-    end
-    [row, column]
+    @map.each_with_index { |index, i| return [i, index.index(tile)] unless index.index(tile).nil? }
   end
-
-  def at(row, column, *args)   
-    @map[row][column] = args[0] if not args[0].nil?
+  
+  def at(row, column, *args)
+    @map[row][column] = args[0] unless args[0].nil?
     @map[row][column]
   end
 
@@ -44,42 +33,27 @@ class Map
     # _
   end
 
-  def size
-    @map.size
-  end
-
-  def count(object)
+  def count(tile)
     i = 0
     @map.each do |row|
-      row.each { |x| i += 1 if x == object }
+      row.each { |x| i += 1 if x == tile }
     end
     i
   end
 
   def win?
-    if count(STONE) == 0
-      true
-    else
-      false
-    end
+    count(STONE) == 0 ? true : false
   end
 
   def to_console(val)
     case val
-    when WALL
-      'X'
-    when EMPTY
-      ' '
-    when STONE
-      'o'
-    when TRAP
-      ':'
-    when TRAPPEDSTONE
-      '0'
-    when POSITION
-      '+'
-    else
-      val.to_s
+    when WALL then 'X'
+    when EMPTY then ' '
+    when STONE then'o'
+    when TRAP then ':'
+    when TRAPPEDSTONE then '0'
+    when POSITION then '+'
+    else val.to_s
     end
   end
 end
